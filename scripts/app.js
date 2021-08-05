@@ -11,6 +11,7 @@ myForm.addEventListener("submit", (e) =>
     let arr = formToArray();
     let obj = objectify(arr);
     let jsonToFile = JSON.stringify(obj);
+    appendHTML(obj);
     alert(jsonToFile);
     
 });
