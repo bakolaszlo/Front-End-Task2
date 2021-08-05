@@ -45,7 +45,11 @@ function formToArray()
     let array = []
     for(i = 0; i<form.length-1;++i)
     {
-        if(form[i].value)
+        if(form[i].name=="image" && form[i].value)
+        {
+            array.push([form[i].name,URL.createObjectURL(form[i].files[0])]);
+        }
+        if(form[i].value && !form[i].name=="image")
             array.push([form[i].name,form[i].value]);
     }
     return array;
