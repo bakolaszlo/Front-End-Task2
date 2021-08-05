@@ -4,7 +4,7 @@
         "firstName":"Bako",
         "mail":"bakolaszlo@mail.com",
         "sex":"Male",
-        "date":"ye",
+        "date":"08,05,2021",
         "image":"data/img.png"
     },
     
@@ -13,97 +13,7 @@
         "firstName":"Loaded",
         "mail":"From local",
         "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
-        "image":"data/img.png"
-    },
-    
-    {
-        "lastName":"Data",
-        "firstName":"Loaded",
-        "mail":"From local",
-        "sex":"Binary",
-        "date":"file",
+        "date":"08-05-2021",
         "image":"data/img.png"
     }
 

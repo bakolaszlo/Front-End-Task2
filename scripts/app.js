@@ -2,6 +2,7 @@ const myForm = document.getElementById('myForm');
 const table = document.getElementById('table-class');
 let buttons = document.getElementsByClassName('btn');
 let storage = window.localStorage;
+let error= "";
 
 
 let startIndex = 0;
@@ -12,6 +13,11 @@ myForm.addEventListener("submit", (e) =>
 {
     e.preventDefault(); //stops the browser redirect
     console.log("Form has been submited.");
+    if(!checkForm())
+    {
+        console.log(error);
+        return
+    }
     let arr = formToArray();
     let obj = objectify(arr);
     let jsonToFile = JSON.stringify(obj);
@@ -49,8 +55,9 @@ function formToArray()
         if(form[i].name=="image" && form[i].value)
         {
             array.push([form[i].name,URL.createObjectURL(form[i].files[0])]);
+            continue;
         }
-        if(form[i].value && !form[i].name=="image")
+        if(form[i].value)
             array.push([form[i].name,form[i].value]);
     }
     return array;
@@ -67,7 +74,9 @@ function appendHTML(array)
     newRow.insertCell().innerHTML=array.lastName;
     newRow.insertCell().innerHTML=array.mail;
     newRow.insertCell().innerHTML=array.sex;
-    newRow.insertCell().innerHTML=array.date;
+
+    newRow.insertCell().innerHTML=formatDate(array.date);
+
 
     if(array.image)
         newRow.insertCell().innerHTML="<img src= \"" + array.image + "\"  width=50 height=50 >";
@@ -79,6 +88,15 @@ function appendHTML(array)
     startIndex+=1;
 }
 
+function formatDate(date)
+{
+    var d = new Date(date);
+    const month = d.toLocaleString('Ro', {month:'long'});
+    const day = d.getDay();
+    const year = d.getFullYear();
+
+    return day+1+' '+month.charAt(0).toUpperCase() + month.slice(1)+' '+year;
+}
 function setListenerForButtons()
 {
     buttons = document.getElementsByClassName('btn');
@@ -128,11 +146,43 @@ function firstLoad()
 
 function clearForm()
 {
-    let form = Array.from(document.querySelectorAll('#myForm input, select'))
+    let form = Array.from(document.querySelectorAll('#myForm input, select'));
     for(i = 0; i<form.length-1;++i)
     {
         form[i].value="";
     }
+}
+
+function checkForm()
+{
+    let form = Array.from(document.querySelectorAll('#myForm input, select'));
+
+
+    //0 First Name
+    //1 Last Name
+    //2 Mail
+    //3 Sex
+    //4 Data
+    //5 Image
+
+    if(!form[0].value || !form[1].value || !form[2].value || !form[3].value || !form[4].value)
+    {
+        error="Every starred (*) field needs to be compeleted.";
+        return false;
+    }
+
+    if(!validateEmail(form[2].value))
+    {
+        error = "Mail is not correct.";
+        return false;
+    }
+
+    return true;
+}
+
+function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
 }
 
 firstLoad()
