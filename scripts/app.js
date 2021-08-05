@@ -18,6 +18,7 @@ myForm.addEventListener("submit", (e) =>
     appendStorage(jsonToFile);
     appendHTML(obj);
     setListenerForButtons();
+    clearForm();
     //console.log(files[0]);
     
 });
@@ -122,6 +123,15 @@ function firstLoad()
     for(i=0;i<data.length;++i)
     {
         appendStorage(data[i]);
+    }
+}
+
+function clearForm()
+{
+    let form = Array.from(document.querySelectorAll('#myForm input, select'))
+    for(i = 0; i<form.length-1;++i)
+    {
+        form[i].value="";
     }
 }
 
