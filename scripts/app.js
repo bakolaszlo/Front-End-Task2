@@ -1,7 +1,11 @@
 const myForm = document.getElementById('myForm');
 const table = document.getElementById('table-class');
+let buttons = document.getElementsByClassName('btn');
+let storage = window.localStorage;
+
 
 let startIndex = 0;
+
 
 
 myForm.addEventListener("submit", (e) =>
@@ -11,10 +15,12 @@ myForm.addEventListener("submit", (e) =>
     let arr = formToArray();
     let obj = objectify(arr);
     let jsonToFile = JSON.stringify(obj);
+    appendStorage(jsonToFile);
     appendHTML(obj);
-    alert(jsonToFile);
+    setListenerForButtons();
     
 });
+
 
 function loadFile(filePath) {
     var result = null;
@@ -47,6 +53,8 @@ function formToArray()
 function appendHTML(array)
 {
     let newRow = table.insertRow();
+    newRow.id=startIndex;
+
     newRow.insertCell().innerHTML=startIndex;
     startIndex+=1;
 
@@ -60,8 +68,17 @@ function appendHTML(array)
         newRow.insertCell().innerHTML="<img src= \"" + array.image + "\"  width=50 height=50 >";
     else
         newRow.insertCell().innerHTML='No Image';
+    
+    newRow.insertCell().innerHTML="<input class=\"btn\" type=button value=X id=btn"+ startIndex+">";
 }
 
+function setListenerForButtons()
+{
+    buttons = document.getElementsByClassName('btn');
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', deleteIndex, false);
+    }
+}
 
 var data = loadFile("data/db.json");
 data = JSON.parse(data)
@@ -70,3 +87,35 @@ for(i=0;i<data.length;++i)
 {
     appendHTML(data[i]);
 }
+
+function appendStorage(array)
+{
+    storage.setItem(startIndex,array);
+}
+
+
+function getFromStorage(index)
+{
+    return JSON.parse(storage.getItem(index));
+}
+
+for(i=0;i<data.length;++i)
+{
+    appendStorage(data[i]);
+}
+
+function deleteRow(rowid)  
+{   
+    console.log(rowid)
+    rowid-=1
+    var row = document.getElementById(rowid);
+    row.parentNode.removeChild(row);
+}
+
+function deleteIndex(event) {
+    
+    deleteRow(event.target.id.toString().replace('btn',''));
+};
+
+
+setListenerForButtons()
