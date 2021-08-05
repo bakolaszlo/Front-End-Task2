@@ -5,31 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
     
 </head>
 <body>
     <form id="myForm">
-        <div>
+        <div class="table-head">
             <label for="firstName">
-                First Name:
+                First Name*:
             </label>
             
             <input type="text" id="firstName" name="firstName"> <br>
             
             <label for="lname">
-                Last Name:
+                Last Name*:
             </label>
             
             <input type="text" id="lastName" name="lastName"> <br>
 
             <label for="mail">
-                Mail:
+                Mail*:
             </label>
 
             <input type="mail" id="mail" name="mail"> <br>
 
             <label for="sex">
-                Sex:
+                Sex*:
             </label>
 
             <select name="sex" id="sex">
@@ -48,7 +49,7 @@
             </select> <br>
 
             <label for="date">
-                Date:
+                Date*:
             </label>
 
             <input type="date" name="date" id="date"> <br>
@@ -62,26 +63,29 @@
 
         </div>
     </form>
-    <div id ="error">
-
+    <div class="table-head" id ="error">
+        
     </div>
 
-    <div class="table">
+    <div class="table-head">
 
-        <table border="2">
+        <table class="table" ">
             <tbody id="table-class">
-                <tr id="-1">
-                    <td>Index</td>
-                    <td>First Name</td>
-                    <td>Last Name</td>
-                    <td>Mail</td>
-                    <td>Sex</td>
-                    <td>Date</td>
-                    <td>Image</td>
-                    <td>Delete</td>
+                <tr id="-1" class="head">
+                    <td class="table-header">Index</td>
+                    <td class="table-header">First Name</td>
+                    <td class="table-header">Last Name</td>
+                    <td class="table-header">Mail</td>
+                    <td class="table-header">Sex</td>
+                    <td class="table-header">Date</td>
+                    <td class="table-header">Image</td>
+                    <td class="table-header">Delete</td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div class="footer">
+
     </div>
     <script src="scripts/app.js"></script>
     </body>
