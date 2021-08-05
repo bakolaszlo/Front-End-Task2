@@ -8,8 +8,11 @@ myForm.addEventListener("submit", (e) =>
 {
     e.preventDefault(); //stops the browser redirect
     console.log("Form has been submited.");
-    let array = document.querySelectorAll('#myForm input, select')
-    console.log(array);
+    let arr = formToArray();
+    let obj = objectify(arr);
+    let jsonToFile = JSON.stringify(obj);
+    alert(jsonToFile);
+    
 });
 
 function loadFile(filePath) {
@@ -23,6 +26,23 @@ function loadFile(filePath) {
     return result;
 }
 
+function objectify(array)
+{
+    return Object.fromEntries(array);
+}
+
+function formToArray()
+{
+    let form = Array.from(document.querySelectorAll('#myForm input, select'))
+    let array = []
+    for(i = 0; i<form.length-1;++i)
+    {
+        if(form[i].value)
+            array.push([form[i].name,form[i].value]);
+    }
+    return array;
+}
+
 function appendHTML(array)
 {
     let newRow = table.insertRow();
@@ -33,11 +53,7 @@ function appendHTML(array)
     newRow.insertCell().innerHTML=array.lastName;
     newRow.insertCell().innerHTML=array.mail;
     newRow.insertCell().innerHTML=array.sex;
-
-    if(array.date)
-        newRow.insertCell().innerHTML=array.date;
-    else
-        newRow.insertCell().innerHTML='No date';
+    newRow.insertCell().innerHTML=array.date;
 
     if(array.image)
         newRow.insertCell().innerHTML="<img src= \"" + array.image + "\"  width=50 height=50 >";
