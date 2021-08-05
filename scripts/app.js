@@ -3,6 +3,7 @@ const table = document.getElementById('table-class');
 let buttons = document.getElementsByClassName('btn');
 let storage = window.localStorage;
 let error= "";
+const errorHolder = document.getElementById('error');
 
 
 let startIndex = 0;
@@ -16,6 +17,7 @@ myForm.addEventListener("submit", (e) =>
     if(!checkForm())
     {
         console.log(error);
+        errorHolder.innerHTML=error;
         return
     }
     let arr = formToArray();
@@ -151,6 +153,7 @@ function clearForm()
     {
         form[i].value="";
     }
+    errorHolder.innerHTML="";
 }
 
 function checkForm()
