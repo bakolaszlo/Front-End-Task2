@@ -56,6 +56,7 @@ function formToArray()
     {
         if(form[i].name=="image" && form[i].value)
         {
+            console.log(form[i].files[0]);
             array.push([form[i].name,URL.createObjectURL(form[i].files[0])]);
             continue;
         }
@@ -70,22 +71,45 @@ function appendHTML(array)
     let newRow = table.insertRow();
     newRow.id=startIndex;
 
-    newRow.insertCell().innerHTML=startIndex;
+    let v = newRow.insertCell();
+    v.innerHTML=startIndex;
+    v.className="column";
 
-    newRow.insertCell().innerHTML=array.firstName;
-    newRow.insertCell().innerHTML=array.lastName;
-    newRow.insertCell().innerHTML=array.mail;
-    newRow.insertCell().innerHTML=array.sex;
+    v = newRow.insertCell();
+    v.innerHTML=array.firstName;
+    v.className="column";
 
-    newRow.insertCell().innerHTML=formatDate(array.date);
+    v = newRow.insertCell();
+    v.innerHTML=array.lastName;
+    v.className="column";
+
+    v = newRow.insertCell();
+    v.innerHTML=array.mail;
+    v.className="column";
+
+    v = newRow.insertCell();
+    v.innerHTML=array.sex;
+    v.className="column";
+
+    v = newRow.insertCell();
+    v.innerHTML=formatDate(array.date);
+    v.className="column";
 
 
     if(array.image)
-        newRow.insertCell().innerHTML="<img src= \"" + array.image + "\"  width=50 height=50 >";
-    else
-        newRow.insertCell().innerHTML='No Image';
-    
-    newRow.insertCell().innerHTML="<input class=\"btn\" type=button value=X id=btn"+ startIndex+">";
+    {
+        v = newRow.insertCell();
+        v.innerHTML="<img src= \"" + array.image + "\"  width=50 height=50 >";
+        v.className="column";
+    }
+    else{
+        v = newRow.insertCell();
+        v.innerHTML='No Image';
+        v.className="column";
+    }
+    v = newRow.insertCell();
+    v.innerHTML="<input class=\"btn\" type=button value=X id=btn"+ startIndex+">";
+    v.className="column";
 
     startIndex+=1;
 }
