@@ -18,6 +18,7 @@ myForm.addEventListener("submit", (e) =>
     appendStorage(jsonToFile);
     appendHTML(obj);
     setListenerForButtons();
+    //console.log(files[0]);
     
 });
 
@@ -56,7 +57,6 @@ function appendHTML(array)
     newRow.id=startIndex;
 
     newRow.insertCell().innerHTML=startIndex;
-    startIndex+=1;
 
     newRow.insertCell().innerHTML=array.firstName;
     newRow.insertCell().innerHTML=array.lastName;
@@ -70,6 +70,8 @@ function appendHTML(array)
         newRow.insertCell().innerHTML='No Image';
     
     newRow.insertCell().innerHTML="<input class=\"btn\" type=button value=X id=btn"+ startIndex+">";
+
+    startIndex+=1;
 }
 
 function setListenerForButtons()
@@ -78,14 +80,6 @@ function setListenerForButtons()
     for (var i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener('click', deleteIndex, false);
     }
-}
-
-var data = loadFile("data/db.json");
-data = JSON.parse(data)
-
-for(i=0;i<data.length;++i)
-{
-    appendHTML(data[i]);
 }
 
 function appendStorage(array)
@@ -99,15 +93,9 @@ function getFromStorage(index)
     return JSON.parse(storage.getItem(index));
 }
 
-for(i=0;i<data.length;++i)
-{
-    appendStorage(data[i]);
-}
-
 function deleteRow(rowid)  
 {   
     console.log(rowid)
-    rowid-=1
     var row = document.getElementById(rowid);
     row.parentNode.removeChild(row);
 }
@@ -117,5 +105,21 @@ function deleteIndex(event) {
     deleteRow(event.target.id.toString().replace('btn',''));
 };
 
+function firstLoad()
+{
+    var data = loadFile("data/db.json");
+    data = JSON.parse(data)
 
+    for(i=0;i<data.length;++i)
+    {
+        appendHTML(data[i]);
+    }
+
+    for(i=0;i<data.length;++i)
+    {
+        appendStorage(data[i]);
+    }
+}
+
+firstLoad()
 setListenerForButtons()
