@@ -26,6 +26,7 @@ input[type=submit] {
 }
 
 
+
 input[type=submit]:hover {
     background-color: #00ad5f;
     color:#393939;
@@ -58,6 +59,7 @@ img {
 }
 
 .table-header {
+    cursor:pointer;
     font-family: Lato-Bold;
     font-size: 15px;
     color: #00ad5f;

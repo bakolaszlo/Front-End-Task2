@@ -212,5 +212,10 @@ function validateEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
+function sortBy(element)
+{
+    console.log(element);
+}
+
 firstLoad()
 setListenerForButtons()

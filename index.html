@@ -34,6 +34,7 @@
             </label>
 
             <select name="sex" id="sex">
+               
                 <option value="" selected disabled hidden>
                     Choose here
                 </option>
@@ -72,14 +73,14 @@
         <table class="table" ">
             <tbody id="table-class">
                 <tr id="-1" class="head">
-                    <td class="table-header">Index</td>
-                    <td class="table-header">First Name</td>
-                    <td class="table-header">Last Name</td>
-                    <td class="table-header">Mail</td>
-                    <td class="table-header">Sex</td>
-                    <td class="table-header">Date</td>
-                    <td class="table-header">Image</td>
-                    <td class="table-header">Delete</td>
+                    <td class="table-header" onclick="sortBy(this.innerHTML)">Index</td>
+                    <td class="table-header" onclick="sortBy(this.innerHTML)">First Name</td>
+                    <td class="table-header" onclick="sortBy(this.innerHTML)">Last Name</td>
+                    <td class="table-header" onclick="sortBy(this.innerHTML)">Mail</td>
+                    <td class="table-header" onclick="sortBy(this.innerHTML)">Sex</td>
+                    <td class="table-header" onclick="sortBy(this.innerHTML)">Date</td>
+                    <td class="table-header" onclick="sortBy(this.innerHTML)">Image</td>
+                    <td class="table-header" onclick="sortBy(this.innerHTML)">Delete</td>
                 </tr>
             </tbody>
         </table>
