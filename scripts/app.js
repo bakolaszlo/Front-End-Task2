@@ -26,7 +26,7 @@ myForm.addEventListener("submit", (e) =>
     appendStorage(jsonToFile);
     appendHTML(obj);
     setListenerForButtons();
-    clearForm();
+    //clearForm();
     //console.log(files[0]);
     
 });
@@ -214,7 +214,143 @@ function validateEmail(email) {
 
 function sortBy(element)
 {
-    console.log(element);
+    var columnIndex=-1;
+    var comparision = '(ASC)';
+    var myTable, rows, switching, i, x, y, shouldSwitch;
+    myTable = document.getElementById("myTable");
+    switching = true;
+
+    for(let i=0;i<myTable.rows[0].cells.length;++i)
+    {
+        if(myTable.rows[0].cells[i].innerHTML === element)
+        {
+            if(myTable.rows[0].cells[i].innerHTML.includes(comparision))
+            {
+                comparision='(DESC)';
+            }
+            columnIndex=i;
+            break;
+        }
+    }
+
+    if(columnIndex==-1)
+    {
+        console.log("Something went wrong. Abort mission " + columnIndex);
+        return;
+    }
+    
+    /*Make a loop that will continue until
+    no switching has been done:*/
+
+    console.log(columnIndex)
+    
+    
+    while (switching) {
+      //start by saying: no switching is done:
+      switching = false;
+      rows = myTable.rows;
+      /*Loop through all table rows (except the
+      first, which contains table headers):*/
+      for (i = 1; i < (rows.length - 1); i++) {
+        //start by saying there should be no switching:
+        shouldSwitch = false;
+        /*Get the two elements you want to compare,
+        one from current row and one from the next:*/
+        x = rows[i].getElementsByTagName("TD")[columnIndex];
+        y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+        
+        //check if the two rows should switch place:
+        if(comparision=='(DESC)')
+        {
+            if(columnIndex==0)
+            {
+                if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                  }
+            }
+            else if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                //if so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+              }
+        }
+        else
+        {
+            if(columnIndex==0)
+            {
+                if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                  }
+            }
+            else if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                //if so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+              }
+        }
+        
+      }
+      if (shouldSwitch) {
+        /*If a switch has been marked, make the switch
+        and mark that a switch has been done:*/
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+      }
+    }
+
+    updateInnerHTML(element,comparision);
+}
+
+function updateInnerHTML(element, comparision)
+{
+    let negateComparision = '(DESC)';
+    if(comparision==='(DESC)')
+    {
+        negateComparision='(ASC)';
+    }
+    console.log("C "+comparision + " N " + negateComparision);
+
+    myTable = document.getElementById("myTable");
+    let index = -1;
+
+    //this ads the table name
+    for(let i=0;i<myTable.rows[0].cells.length;++i)
+    {
+        if(myTable.rows[0].cells[i].innerHTML === element)
+        {
+            if(!myTable.rows[0].cells[i].innerHTML.includes(comparision))
+            {
+                console.log("added "+comparision);
+                myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML + comparision;
+                index = i;
+            }
+
+            if(myTable.rows[0].cells[i].innerHTML.includes(negateComparision))
+            {
+                console.log("Removed " + negateComparision)
+                myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(negateComparision,"");
+                index = i;
+            }
+            console.log(myTable.rows[0].cells[i].innerHTML);
+
+            break;
+        }
+    }
+
+    //this deletes any unnecesarry strings
+    for(let i=0;i<myTable.rows[0].cells.length;++i)
+    {
+        if(myTable.rows[0].cells[i].innerHTML.includes(comparision) && index != i)
+        {
+            myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(comparision,"");
+        }
+    }
+
+
 }
 
 firstLoad()
