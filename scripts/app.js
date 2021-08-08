@@ -353,6 +353,10 @@ function updateInnerHTML(element, comparision)
         {
             myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(comparision,"");
         }
+        if(myTable.rows[0].cells[i].innerHTML.includes(negateComparision) && index != i)
+        {
+            myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(negateComparision,"");
+        }
     }
 
 
@@ -498,6 +502,7 @@ function filterByKw(value)
                 txtValue = td.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
                     arrToShow[i]=true;
+                    break;
                 }
             }            
         }
