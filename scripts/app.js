@@ -438,17 +438,17 @@ function filterByImg()
 function filterByDate(startDate, endDate) {
     if(startDate)
     {
+        startDate=formatDate(startDate);
         startDate = new Date(startDate);
-        console.log("Start Date." + startDate);
     }
 
     if(endDate)
     {
+        startDate=formatDate(endDate);
         endDate = new Date(endDate);
-        console.log("End Date." + endDate);
     }
 
-    var filter, table, tr, td, i, txtValue;
+    var filter, table, tr, td, i;
     filter = startDate||endDate;
     table = document.getElementById("myTable");
     tr = table.getElementsByTagName("tr");
@@ -458,6 +458,9 @@ function filterByDate(startDate, endDate) {
           cellDate = new Date(td.innerHTML);
           if(startDate)
           {
+              console.log("C: " + cellDate);
+              console.log("S: "+ startDate);
+                console.log(cellDate >= startDate);
               if (cellDate >= startDate) {
                   tr[i].style.display = "";
                 } else {
@@ -475,6 +478,43 @@ function filterByDate(startDate, endDate) {
           
         }       
       }
+}
+
+function filterByKw(value)
+{
+    myTable = document.getElementById("myTable");
+    rowsLength = myTable.rows.length;
+    var arrToShow = Array(rowsLength).fill(false);
+
+    var filter, table, tr, td, i, txtValue;
+    filter = value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) { //row
+        for (cell = 0; cell < tr[i].cells.length ; ++cell)
+        {
+            td = tr[i].getElementsByTagName("td")[cell];
+            if (td) {
+                txtValue = td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    arrToShow[i]=true;
+                }
+            }            
+        }
+    }
+
+    for(i=1;i<tr.length;++i)
+    {
+        if(!arrToShow[i])
+        {
+            tr[i].style.display="none";
+        }
+        else
+        {
+            tr[i].style.display="";
+        }
+    }
+
 }
 
 firstLoad()
