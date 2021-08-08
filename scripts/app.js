@@ -14,12 +14,14 @@ myForm.addEventListener("submit", (e) =>
 {
     e.preventDefault(); //stops the browser redirect
     console.log("Form has been submited.");
-    if(!checkForm())
-    {
-        console.log(error);
-        errorHolder.innerHTML=error;
-        return
-    }
+
+    // if(!checkForm())
+    // {
+    //     console.log(error);
+    //     errorHolder.innerHTML=error;
+    //     return
+    // }
+    
     let arr = formToArray();
     let obj = objectify(arr);
     let jsonToFile = JSON.stringify(obj);
@@ -354,7 +356,7 @@ function updateInnerHTML(element, comparision)
 }
 
 
-function filterBy()
+function filterBySex()
 {
     var input = document.getElementById('filterSex');
 
@@ -382,6 +384,44 @@ function filterBy()
       td = tr[i].getElementsByTagName("td")[4];
       if (td) {
         txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }       
+    }
+    
+}
+
+function filterByImg()
+{
+    var input = document.getElementById('filterImg');
+
+    switch (input.value)
+    {
+        case 'female':
+            console.log("Its female");
+            break;
+        case 'male':
+            console.log('Its male');
+            break;
+        case 'wtf':
+            console.log('Why on earth...');
+            break;
+        default:
+            console.log(input.value);
+            break;
+    }
+
+    var filter, table, tr, td, i, txtValue;
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[6];
+      if (td) {
+        txtValue = td.innerHTML;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
           tr[i].style.display = "";
         } else {

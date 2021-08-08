@@ -72,7 +72,7 @@
         Filters:
         <div>
             By sex
-            <select name="filterSex" id="filterSex" onchange="filterBy()">
+            <select name="filterSex" id="filterSex" onchange="filterBySex()">
                
                 <option value="" selected>
                     All
@@ -85,6 +85,22 @@
                 </option>
                 <option value="wtf">
                     Other
+                </option>
+            </select> <br>
+        </div>
+
+        <div>
+            By Image
+            <select name="filterImg" id="filterImg" onchange="filterByImg()">
+               
+                <option value="" selected>
+                    All
+                </option>
+                <option value="img">
+                    With
+                </option>
+                <option value="No Image">
+                    Without
                 </option>
             </select> <br>
         </div>
