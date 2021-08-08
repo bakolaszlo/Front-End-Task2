@@ -353,5 +353,48 @@ function updateInnerHTML(element, comparision)
 
 }
 
+
+function filterBy()
+{
+    var input = document.getElementById('filterSex');
+
+    switch (input.value)
+    {
+        case 'female':
+            console.log("Its female");
+            break;
+        case 'male':
+            console.log('Its male');
+            break;
+        case 'wtf':
+            console.log('Why on earth...');
+            break;
+        default:
+            console.log(input.value);
+            break;
+    }
+
+    var filter, table, tr, td, i, txtValue;
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[4];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }       
+    }
+    
+}
+
+function filterRow(index) {
+   
+  }
+
 firstLoad()
 setListenerForButtons()
