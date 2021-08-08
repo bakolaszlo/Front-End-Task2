@@ -56,6 +56,8 @@ function formToArray()
     let array = []
     for(i = 0; i<form.length-1;++i)
     {
+        console.log(form[i].value);
+
         if(form[i].name=="image" && form[i].value)
         {
             console.log(form[i].files[0]);
@@ -64,6 +66,7 @@ function formToArray()
         }
         if(form[i].value)
             array.push([form[i].name,form[i].value]);
+    
     }
     return array;
 }
@@ -120,10 +123,10 @@ function formatDate(date)
 {
     var d = new Date(date);
     const month = d.toLocaleString('Ro', {month:'long'});
-    const day = d.getDay();
+    const day = d.getDate();
     const year = d.getFullYear();
 
-    return day+1+' '+month.charAt(0).toUpperCase() + month.slice(1)+' '+year;
+    return day+' '+month.charAt(0).toUpperCase() + month.slice(1)+' '+year;
 }
 function setListenerForButtons()
 {
@@ -432,9 +435,47 @@ function filterByImg()
     
 }
 
-function filterRow(index) {
-   
-  }
+function filterByDate(startDate, endDate) {
+    if(startDate)
+    {
+        startDate = new Date(startDate);
+        console.log("Start Date." + startDate);
+    }
+
+    if(endDate)
+    {
+        endDate = new Date(endDate);
+        console.log("End Date." + endDate);
+    }
+
+    var filter, table, tr, td, i, txtValue;
+    filter = startDate||endDate;
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[5];
+        if (td) {
+          cellDate = new Date(td.innerHTML);
+          if(startDate)
+          {
+              if (cellDate >= startDate) {
+                  tr[i].style.display = "";
+                } else {
+                  tr[i].style.display = "none";
+                }
+          }
+          else
+          {
+            if (cellDate <= startDate) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+          }
+          
+        }       
+      }
+}
 
 firstLoad()
 setListenerForButtons()
