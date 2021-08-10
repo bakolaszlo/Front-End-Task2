@@ -1,3 +1,27 @@
+document.addEventListener("DOMContentLoaded", event =>
+{
+    const app = firebase.app();
+    const db = firebase.firestore();
+
+    const workRef = db.collection('workers');
+
+    workRef.get()
+        .then(doc => {
+                doc.forEach(doc =>{
+                    data = doc.data()
+                    appendHTML(data,doc.id)
+                    console.log();
+                    
+                })
+                
+                setListenerForButtons()
+            });
+    console.log("data loaded");
+
+    
+});
+
+
 const myForm = document.getElementById('myForm');
 const table = document.getElementById('table-class');
 let buttons = document.getElementsByClassName('btn');
@@ -24,11 +48,12 @@ myForm.addEventListener("submit", (e) =>
     
     let arr = formToArray();
     let obj = objectify(arr);
-    let jsonToFile = JSON.stringify(obj);
-    appendStorage(jsonToFile);
+    //let jsonToFile = JSON.stringify(obj);
+    //appendStorage(jsonToFile);
     appendHTML(obj);
+    appendFireBase(obj);
     setListenerForButtons();
-    //clearForm();
+    clearForm();
     //console.log(files[0]);
     
 });
@@ -54,7 +79,7 @@ function formToArray()
 {
     let form = Array.from(document.querySelectorAll('#myForm input, select'))
     let array = []
-    for(i = 0; i<form.length-1;++i)
+    for(i = 0; i<form.length-3;++i)
     {
         console.log(form[i].value);
 
@@ -71,8 +96,9 @@ function formToArray()
     return array;
 }
 
-function appendHTML(array)
+function appendHTML(array,startIndex)
 {
+
     let newRow = table.insertRow();
     newRow.id=startIndex;
 
@@ -122,7 +148,7 @@ function appendHTML(array)
 function formatDate(date)
 {
     var d = new Date(date);
-    const month = d.toLocaleString('Ro', {month:'long'});
+    const month = d.toLocaleString('En', {month:'long'});
     const day = d.getDate();
     const year = d.getFullYear();
 
@@ -141,6 +167,14 @@ function appendStorage(array)
     storage.setItem(startIndex,array);
 }
 
+function appendFireBase(array)
+{
+    const db = firebase.firestore();
+
+    console.log(array);
+    db.collection('workers').doc((startIndex-1).toString()).set(array);
+}
+
 
 function getFromStorage(index)
 {
@@ -152,6 +186,12 @@ function deleteRow(rowid)
     console.log(rowid)
     var row = document.getElementById(rowid);
     row.parentNode.removeChild(row);
+    const db = firebase.firestore();
+
+    db.collection('workers').doc(rowid.toString()).delete().then(() =>
+    {
+        console.log(`${rowid} deleted`);
+    })
 }
 
 function deleteIndex(event) {
@@ -172,6 +212,17 @@ function firstLoad()
     for(i=0;i<data.length;++i)
     {
         appendStorage(data[i]);
+    }
+    for (var i = 0; i < storage.length; i++){
+        if(storage.getItem(storage.key(i)))
+        {
+            console.log(storage.getItem(storage.key(i)));
+            try {
+                appendHTML(JSON.parse(storage.getItem(storage.key(i))));
+            } catch (error) {
+                continue;
+            }
+        }
     }
 }
 
@@ -220,7 +271,7 @@ function validateEmail(email) {
 function sortBy(element)
 {
     var columnIndex=-1;
-    var comparision = '(ASC)';
+    var comparison = '(ASC)';
     var myTable, rows, switching, i, x, y, shouldSwitch;
     myTable = document.getElementById("myTable");
     switching = true;
@@ -229,9 +280,9 @@ function sortBy(element)
     {
         if(myTable.rows[0].cells[i].innerHTML === element)
         {
-            if(myTable.rows[0].cells[i].innerHTML.includes(comparision))
+            if(myTable.rows[0].cells[i].innerHTML.includes(comparison))
             {
-                comparision='(DESC)';
+                comparison='(DESC)';
             }
             columnIndex=i;
             break;
@@ -265,7 +316,7 @@ function sortBy(element)
         y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
         
         //check if the two rows should switch place:
-        if(comparision=='(DESC)')
+        if(comparison=='(DESC)')
         {
             if(columnIndex==0)
             {
@@ -307,17 +358,17 @@ function sortBy(element)
       }
     }
 
-    updateInnerHTML(element,comparision);
+    updateInnerHTML(element,comparison);
 }
 
-function updateInnerHTML(element, comparision)
+function updateInnerHTML(element, comparison)
 {
-    let negateComparision = '(DESC)';
-    if(comparision==='(DESC)')
+    let negateComparison = '(DESC)';
+    if(comparison==='(DESC)')
     {
-        negateComparision='(ASC)';
+        negateComparison='(ASC)';
     }
-    console.log("C "+comparision + " N " + negateComparision);
+    console.log("C "+comparison + " N " + negateComparison);
 
     myTable = document.getElementById("myTable");
     let index = -1;
@@ -327,17 +378,17 @@ function updateInnerHTML(element, comparision)
     {
         if(myTable.rows[0].cells[i].innerHTML === element)
         {
-            if(!myTable.rows[0].cells[i].innerHTML.includes(comparision))
+            if(!myTable.rows[0].cells[i].innerHTML.includes(comparison))
             {
-                console.log("added "+comparision);
-                myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML + comparision;
+                console.log("added "+comparison);
+                myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML + comparison;
                 index = i;
             }
 
-            if(myTable.rows[0].cells[i].innerHTML.includes(negateComparision))
+            if(myTable.rows[0].cells[i].innerHTML.includes(negateComparison))
             {
-                console.log("Removed " + negateComparision)
-                myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(negateComparision,"");
+                console.log("Removed " + negateComparison)
+                myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(negateComparison,"");
                 index = i;
             }
             console.log(myTable.rows[0].cells[i].innerHTML);
@@ -349,13 +400,13 @@ function updateInnerHTML(element, comparision)
     //this deletes any unnecesarry strings
     for(let i=0;i<myTable.rows[0].cells.length;++i)
     {
-        if(myTable.rows[0].cells[i].innerHTML.includes(comparision) && index != i)
+        if(myTable.rows[0].cells[i].innerHTML.includes(comparison) && index != i)
         {
-            myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(comparision,"");
+            myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(comparison,"");
         }
-        if(myTable.rows[0].cells[i].innerHTML.includes(negateComparision) && index != i)
+        if(myTable.rows[0].cells[i].innerHTML.includes(negateComparison) && index != i)
         {
-            myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(negateComparision,"");
+            myTable.rows[0].cells[i].innerHTML = myTable.rows[0].cells[i].innerHTML.replace(negateComparison,"");
         }
     }
 
@@ -521,6 +572,3 @@ function filterByKw(value)
     }
 
 }
-
-firstLoad()
-setListenerForButtons()
