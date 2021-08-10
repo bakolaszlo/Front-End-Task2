@@ -162,11 +162,13 @@ function editMember(id)
 {
     console.log(id)
     id=id.toString().replace('edit','')
+
+    names = ['0','firstName', 'lastName', 'mail'];
     
     var row = document.getElementById(id);
     for(i=1;i<4;++i)
     {
-        row.cells[i].innerHTML = "<td class=\"column\"><input type=\"text\" value=" + row.cells[i].innerText +"></td>"
+        row.cells[i].innerHTML = "<td class=\"column\"><input type=\"text\" value=" + row.cells[i].innerText +" name="+names[i]+"></td>"
     }
 
     male = false;
@@ -204,9 +206,43 @@ function editMember(id)
 
     row.cells[5].innerHTML = "<td class=\"column\"><input type=\"date\" name=\"date\" id=\"date\" value="+year+"-"+month+"-"+day+"></td>";
     row.cells[7].firstElementChild.value="Apply";
-    row.cells[7].firstElementChild.onclick= function () {console.log('hi')};
+    row.cells[7].firstElementChild.onclick= function () {applyEdit(id)};
     
-   
+}
+
+function applyEdit(id)
+{
+    let rawRow = Array.from(document.querySelectorAll('#\\3'+id+'  td select, #\\3'+id+'  td input'));
+    let array = []
+    for(i=0; i<5; ++i)
+    {
+        console.log(rawRow[i].value);
+
+        if(rawRow[i].value)
+            array.push([rawRow[i].name,rawRow[i].value]);
+    
+    }
+    
+    obj = objectify(array);
+    console.log(obj);
+    updateFireBase(id,obj)
+}
+
+function updateFireBase(id,obj)
+{
+    console.log(id);
+
+    const db = firebase.firestore();
+
+    const workRef = db.collection('workers').doc(id.toString());
+
+    return workRef.update(obj).then(() =>{
+        console.log("Updated.");
+    })
+    .catch((error) =>{
+    console.error("Error updating document:" + error);
+    });
+
 }
 
 Number.prototype.zeroPad = function() {
