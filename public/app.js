@@ -1,3 +1,7 @@
+
+
+let maxIndex = 0;
+
 document.addEventListener("DOMContentLoaded", event =>
 {
     const app = firebase.app();
@@ -10,7 +14,10 @@ document.addEventListener("DOMContentLoaded", event =>
                 doc.forEach(doc =>{
                     data = doc.data()
                     appendHTML(data,doc.id)
-                    console.log();
+                    if(maxIndex<doc.id)
+                    {
+                        maxIndex=parseInt(doc.id);
+                    }
                     
                 })
                 
@@ -30,7 +37,6 @@ let error= "";
 const errorHolder = document.getElementById('error');
 
 
-let startIndex = 0;
 
 
 
@@ -50,7 +56,8 @@ myForm.addEventListener("submit", (e) =>
     let obj = objectify(arr);
     //let jsonToFile = JSON.stringify(obj);
     //appendStorage(jsonToFile);
-    appendHTML(obj);
+    maxIndex+=1;
+    appendHTML(obj,maxIndex);
     appendFireBase(obj);
     setListenerForButtons();
     clearForm();
@@ -79,7 +86,7 @@ function formToArray()
 {
     let form = Array.from(document.querySelectorAll('#myForm input, select'))
     let array = []
-    for(i = 0; i<form.length-3;++i)
+    for(i = 0; i<6;++i)
     {
         console.log(form[i].value);
 
@@ -138,12 +145,73 @@ function appendHTML(array,startIndex)
         v.innerHTML='No Image';
         v.className="column";
     }
+    
+    v = newRow.insertCell();
+    v.innerHTML = "<input class=\"edit\" type=button value=Edit id=edit"+ startIndex+" onclick=editMember(this.id)>";
+    v.className="column";
+
     v = newRow.insertCell();
     v.innerHTML="<input class=\"btn\" type=button value=X id=btn"+ startIndex+">";
     v.className="column";
 
-    startIndex+=1;
+
 }
+
+
+function editMember(id)
+{
+    console.log(id)
+    id=id.toString().replace('edit','')
+    
+    var row = document.getElementById(id);
+    for(i=1;i<4;++i)
+    {
+        row.cells[i].innerHTML = "<td class=\"column\"><input type=\"text\" value=" + row.cells[i].innerText +"></td>"
+    }
+
+    male = false;
+    female=false;
+    other=false;
+
+    value = row.cells[4].innerText.toLowerCase()
+    row.cells[4].innerHTML ="<td class=\"column\"><select name=\"sex\" id=\"sex\"> <option value=\"female\">Female</option><option value=\"male\"> Male </option><option value=\"wtf\">Other</option></select></td>";
+    row.cells[4].firstElementChild.value=value;
+
+    value = row.cells[5].innerText;
+    d = new Date(value);
+    
+    
+    day = d.getDate();
+    try
+    {
+        day = day.zeroPad()
+    }
+    catch
+    {
+        ;
+    }
+    
+    month = d.getMonth();
+    try
+    {
+        month = month.zeroPad();
+    }
+    catch
+    {
+        ;
+    }
+    year = d.getFullYear();
+
+    row.cells[5].innerHTML = "<td class=\"column\"><input type=\"date\" name=\"date\" id=\"date\" value="+year+"-"+month+"-"+day+"></td>";
+    row.cells[7].firstElementChild.value="Apply";
+    row.cells[7].firstElementChild.onclick= function () {console.log('hi')};
+    
+   
+}
+
+Number.prototype.zeroPad = function() {
+    return ('0'+this).slice(-2);
+ };
 
 function formatDate(date)
 {
@@ -172,7 +240,7 @@ function appendFireBase(array)
     const db = firebase.firestore();
 
     console.log(array);
-    db.collection('workers').doc((startIndex-1).toString()).set(array);
+    db.collection('workers').doc((maxIndex).toString()).set(array);
 }
 
 

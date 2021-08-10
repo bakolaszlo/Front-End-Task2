@@ -25,6 +25,9 @@ input[type=submit] {
     cursor: pointer;
 }
 
+select {
+    min-width: 9em;
+}
 
 
 input[type=submit]:hover {
@@ -42,6 +45,11 @@ div {
    width:auto;
    border-radius: 50%;
 }
+
+.edit {
+    width:auto;
+    border-radius: 50%;
+ }
 
 .btn:hover {
     cursor: pointer;
