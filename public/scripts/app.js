@@ -1,42 +1,232 @@
 
-
 let maxIndex = 0;
-
-document.addEventListener("DOMContentLoaded", event =>
-{
-    const app = firebase.app();
-    const db = firebase.firestore();
-
-    const workRef = db.collection('workers');
-
-    workRef.get()
-        .then(doc => {
-                doc.forEach(doc =>{
-                    data = doc.data()
-                    appendHTML(data,doc.id)
-                    if(maxIndex<doc.id)
-                    {
-                        maxIndex=parseInt(doc.id);
-                    }
-                    
-                })
-                
-                setListenerForButtons()
-            });
-    console.log("data loaded");
-
-    
-});
-
-
 const myForm = document.getElementById('myForm');
 const table = document.getElementById('table-class');
 let buttons = document.getElementsByClassName('btn');
 let storage = window.localStorage;
 let error= "";
 const errorHolder = document.getElementById('error');
+let pageSize = 5;
+let ref;
+let field = 'createdAt';
+let query ;
+let last;
+let first;
+let boolFirst = true;
+
+document.addEventListener("DOMContentLoaded", event =>
+{
+    
+    ref = firebase.firestore().collection('employees');
+    query = ref.orderBy(field).limit(pageSize);
+    
+
+    ref
+        .orderBy(field)
+        .limit(pageSize)
+        .get()
+        .then(doc=> 
+            { doc.forEach(doc =>
+                { 
+                    if(boolFirst)
+                    {
+                        first = doc.data();
+                        boolFirst=false;
+                    }
+                    data = doc.data();
+                    last = data;
+                    appendHTML(data,doc.id);
+                    if(maxIndex<doc.id)
+                    {
+                        maxIndex=parseInt(doc.id);
+                    }
+                    console.log(doc.data())}
+                    
+                )
+                isPrevPageAvailable();
+                setListenerForButtons();
+            });
+
+    boolFirst = true;
+    console.log("data loaded");
+
+});
 
 
+function pagePrev()
+{
+    clearTable();
+    ref.orderBy(field)
+        .endBefore(first[field])
+        .limitToLast(pageSize)
+        .get()
+        .then(doc=> 
+            { doc.forEach(doc =>
+                { 
+                    if(boolFirst)
+                    {
+                        first = doc.data();
+                        boolFirst=false;
+                    }
+                    data = doc.data();
+                    last = data;
+                    appendHTML(data,doc.id);
+                    if(maxIndex<doc.id)
+                    {
+                        maxIndex=parseInt(doc.id);
+                    }
+                    console.log(doc.data())}
+                    
+                )
+                
+                isNextPageAvailable();
+                isPrevPageAvailable();
+                setListenerForButtons();
+            });
+            boolFirst=true;
+
+}
+
+function isPrevPageAvailable()
+{
+    ref.orderBy(field)
+        .endBefore(first[field])
+        .limitToLast(pageSize)
+        .get()
+        .then(doc=> 
+            { 
+                console.log("Prev check : " + doc.size);
+                if(parseInt(doc.size) === 0)
+                {
+                    disablePrevPage();
+                }
+                else
+                {
+                    enablePrevPage();
+                }
+            });
+}
+
+function disablePrevPage()
+{
+    document.getElementById('prevBtn').disabled=true;
+}
+
+function enablePrevPage()
+{
+    document.getElementById('prevBtn').disabled=false;
+}
+
+function isNextPageAvailable()
+{
+    ref.orderBy(field)
+    .startAfter(last[field])
+    .limit(pageSize)
+    .get()
+    .then(doc=> 
+        { 
+            if(parseInt(doc.size) === 0)
+            {
+                disableNextPage();
+            }
+            else
+            {
+                enableNextPage();
+            }
+        });
+}
+
+function pageNext()
+{
+    clearTable();
+    ref.orderBy(field)
+        .startAfter(last[field])
+        .limit(pageSize)
+        .get()
+        .then(doc=> 
+            { doc.forEach(doc =>
+                { 
+                    if(boolFirst)
+                    {
+                        first = doc.data();
+                        boolFirst=false;
+                    }
+                    data = doc.data();
+                    last = data;
+                    appendHTML(data,doc.id);
+                    if(maxIndex<doc.id)
+                    {
+                        maxIndex=parseInt(doc.id);
+                    }
+                    console.log(doc.data())
+                    
+                }
+                )
+                
+                isNextPageAvailable();
+                isPrevPageAvailable();
+                setListenerForButtons();
+            });
+    
+    boolFirst = true;
+}
+
+function disableNextPage()
+{
+    document.getElementById('nextBtn').disabled=true;
+}
+
+function enableNextPage()
+{
+    document.getElementById('nextBtn').disabled=false;
+}
+
+function clearTable()
+{
+    try{
+        while(true)
+            document.getElementById("myTable").deleteRow(1);
+    }
+    catch
+    {
+        return;
+    }
+}
+
+
+function setEmployeesToShow(stringVal)
+{
+    pageSize=parseInt(stringVal);
+    clearTable();
+    ref
+        .orderBy(field)
+        .limit(pageSize)
+        .get()
+        .then(doc=> 
+            { doc.forEach(doc =>
+                { 
+                    if(boolFirst)
+                    {
+                        first = doc.data();
+                        boolFirst=false;
+                    }
+                    data = doc.data();
+                    last = data;
+                    appendHTML(data,doc.id);
+                    if(maxIndex<doc.id)
+                    {
+                        maxIndex=parseInt(doc.id);
+                    }
+                    console.log(doc.data())}
+                    
+                )
+                setListenerForButtons();
+                isPrevPageAvailable();
+                isNextPageAvailable();
+            });
+
+    boolFirst = true;
+}
 
 
 
@@ -60,7 +250,7 @@ myForm.addEventListener("submit", (e) =>
     appendHTML(obj,maxIndex);
     appendFireBase(obj);
     setListenerForButtons();
-    clearForm();
+    //clearForm();
     //console.log(files[0]);
     
 });
@@ -193,7 +383,7 @@ function editMember(id)
         ;
     }
     
-    month = d.getMonth();
+    month = d.getMonth()+1;
     try
     {
         month = month.zeroPad();
@@ -212,7 +402,7 @@ function editMember(id)
 
 function applyEdit(id)
 {
-    let rawRow = Array.from(document.querySelectorAll('#\\3'+id+'  td select, #\\3'+id+'  td input'));
+    let rawRow = Array.from(document.querySelectorAll(`#${CSS.escape(id.toString())} td select, #${CSS.escape(id.toString())}  td input`));
     let array = []
     for(i=0; i<5; ++i)
     {
@@ -225,7 +415,28 @@ function applyEdit(id)
     
     obj = objectify(array);
     console.log(obj);
-    updateFireBase(id,obj)
+    updateFireBase(id,obj);
+    resetRow(id);
+}
+
+
+function resetRow(id)
+{
+    names = ['0','firstName', 'lastName', 'mail'];
+    
+    var row = document.getElementById(id);
+    for(i=1;i<4;++i)
+    {
+        row.cells[i].innerHTML = "<td class=\"column\">"+ row.cells[i].firstElementChild.value +"</td>"
+    }
+
+    row.cells[4].innerHTML ="<td class=\"column\">"+ row.cells[4].firstElementChild.value+ "</td>";
+    
+    var d = formatDate(row.cells[5].firstElementChild.value);
+    row.cells[5].innerHTML = "<td class=\"column\">"+d+"</td>";
+    row.cells[7].firstElementChild.value="Edit";
+    row.cells[7].firstElementChild.onclick= function () {editMember(id)};
+    
 }
 
 function updateFireBase(id,obj)
@@ -234,7 +445,7 @@ function updateFireBase(id,obj)
 
     const db = firebase.firestore();
 
-    const workRef = db.collection('workers').doc(id.toString());
+    const workRef = db.collection('employees').doc(id.toString());
 
     return workRef.update(obj).then(() =>{
         console.log("Updated.");
@@ -276,7 +487,8 @@ function appendFireBase(array)
     const db = firebase.firestore();
 
     console.log(array);
-    db.collection('workers').doc((maxIndex).toString()).set(array);
+    array.createdAt = new Date();
+    db.collection('employees').doc((maxIndex).toString()).set(array).then(console.log(array));
 }
 
 
@@ -292,7 +504,7 @@ function deleteRow(rowid)
     row.parentNode.removeChild(row);
     const db = firebase.firestore();
 
-    db.collection('workers').doc(rowid.toString()).delete().then(() =>
+    db.collection('employees').doc(rowid.toString()).delete().then(() =>
     {
         console.log(`${rowid} deleted`);
     })

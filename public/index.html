@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <title>WIP</title>
     <link rel="stylesheet" href="style.css">
 
     <!-- update the version number as needed -->
@@ -22,6 +22,7 @@
       to avoid connecting the SDK to running emulators.
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src="scripts/variables.js"></script>
 
 
   </head>
@@ -137,6 +138,27 @@
           <input type="text" id="filterKw" onkeyup="filterByKw(value)" placeholder="Search for anything.." title="Type in a name">
       </div>
   </div>
+
+  <div>
+      <button id="prevBtn" onclick="pagePrev()">
+          Prev
+    </button>
+    <button id="nextBtn" onclick="pageNext()">
+        Next
+      </button>
+
+      <select onchange="setEmployeesToShow(this.value)">
+        <option value='5' selected>
+            5
+        </option>
+        <option value='10'>
+            10
+        </option>
+        <option value='25'>
+            25
+        </option>
+      </select>
+  </div>
   <div class="table-head">
 
       <table class="table" id="myTable">
@@ -158,6 +180,6 @@
   <div class="footer">
 
   </div>
-  <script src="app.js"></script>
+  <script src="scripts/app.js"></script>
   </body>
 </html>
