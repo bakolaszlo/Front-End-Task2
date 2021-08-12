@@ -13,13 +13,16 @@ let query ;
 let last;
 let first;
 let boolFirst = true;
+let storageRef;
 
 document.addEventListener("DOMContentLoaded", event =>
 {
     
     ref = firebase.firestore().collection('employees');
     query = ref.orderBy(field).limit(pageSize);
+    storageRef = firebase.storage().ref();
     
+    setMaxIndex();
 
     ref
         .orderBy(field)
@@ -52,16 +55,27 @@ document.addEventListener("DOMContentLoaded", event =>
 
 });
 
+function setMaxIndex()
+{
+    ref.orderBy(field, "desc").limit(1).get().then(
+        doc => {
+               doc.forEach(doc =>{ 
+                   maxIndex = doc.id
+                   console.log("Index set to:", maxIndex);
+                })
+        }
+    )
+}
 
 function pagePrev()
 {
-    clearTable();
     ref.orderBy(field)
-        .endBefore(first[field])
-        .limitToLast(pageSize)
-        .get()
-        .then(doc=> 
-            { doc.forEach(doc =>
+    .endBefore(first[field])
+    .limitToLast(pageSize)
+    .get()
+    .then(doc=> 
+        {   clearTable();
+            doc.forEach(doc =>
                 { 
                     if(boolFirst)
                     {
@@ -85,6 +99,18 @@ function pagePrev()
             });
             boolFirst=true;
 
+}
+
+
+function uploadImg(file)
+{
+    metadata ={
+        contentType: 'image/jpeg',
+    };
+
+    storageRef.child('profiles/'+maxIndex).put(file,metadata).then((snapshot)=>{
+        console.log("file uploaded?!");
+    });
 }
 
 function isPrevPageAvailable()
@@ -138,13 +164,15 @@ function isNextPageAvailable()
 
 function pageNext()
 {
-    clearTable();
     ref.orderBy(field)
         .startAfter(last[field])
         .limit(pageSize)
         .get()
         .then(doc=> 
-            { doc.forEach(doc =>
+            { 
+                
+                clearTable();
+                doc.forEach(doc =>
                 { 
                     if(boolFirst)
                     {
@@ -197,13 +225,15 @@ function clearTable()
 function setEmployeesToShow(stringVal)
 {
     pageSize=parseInt(stringVal);
-    clearTable();
     ref
         .orderBy(field)
         .limit(pageSize)
         .get()
         .then(doc=> 
-            { doc.forEach(doc =>
+            { 
+                
+                clearTable();
+                doc.forEach(doc =>
                 { 
                     if(boolFirst)
                     {
@@ -568,6 +598,18 @@ function checkForm()
     {
         error="Every starred (*) field needs to be compeleted.";
         return false;
+    }
+
+    try{
+        var filesize = ((form[5].files[0].size/1024)/1024).toFixed(4);
+        if(filesize > 2)
+        {
+            error = "File size is to big. Max 2mb is allowed.";
+            return false;
+        }
+    }
+    catch{
+        ;
     }
 
     if(!validateEmail(form[2].value))
